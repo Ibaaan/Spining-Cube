@@ -153,17 +153,9 @@ int main()
     Vector3 new_dots[8];
     while (true)
     {
-        for (int index = 0; index < trs.size(); index++)
-        {
-            std::vector<int> v = trs[index];
-            double z_summ = 0;
-            for (int i : v)
-            {
-                z_summ += dots[i].z;
-            }
-        }
+        
 
-        std::sort(plane_fz_idcs.begin(), plane_fz_idcs.end(), compare_z_index);
+        
 
         ST7735_FillScreen(ST7735_BLACK);
         angle_x += 0.02;
@@ -172,11 +164,22 @@ int main()
 
         for (int i = 0; i < 8; i++)
         {
-            new_dots[i] = dots[i];
-            //                   .rotate_yz(angle_x)  // Around X
-            //                   .rotate_xz(angle_y); // Around Y
+            new_dots[i] = dots[i]
+                              .rotate_yz(angle_x)  // Around X
+                              .rotate_xz(angle_y); // Around Y
         }
 
+        for (int index = 0; index < trs.size(); index++)
+        {
+            std::vector<int> v = trs[index];
+            double z_summ = 0;
+            for (int i : v)
+            {
+                z_summ += new_dots[i].z;
+            }
+            plane_fz_idcs.push_back((PlaneZIndex){index, z_summ});
+        }
+        std::sort(plane_fz_idcs.begin(), plane_fz_idcs.end(), compare_z_index);
         for (int i = plane_fz_idcs.size() - 1; i >= 0; i--)
         {
             PlaneZIndex plz = plane_fz_idcs[i];
@@ -194,7 +197,7 @@ int main()
             yy2 = calculate_pixel_y(dot2.y / (dot2.z + 2.));
             xx3 = calculate_pixel_x(dot3.x / (dot3.z + 2.));
             yy3 = calculate_pixel_y(dot3.y / (dot3.z + 2.));
-            xx4 = calculate_pixel_x(dot3.x / (dot3.z + 2.));
+            xx4 = calculate_pixel_x(dot4.x / (dot4.z + 2.));
             yy4 = calculate_pixel_y(dot4.y / (dot4.z + 2.));
 
             ST7735_DrawTriangleFill(
@@ -203,12 +206,13 @@ int main()
                 xx3, yy3,
                 color);
 
-            // ST7735_DrawTriangleFill(
-            //     xx1, yy1,
-            //     xx4, yy4,
-            //     xx3, yy3,
-            //     color
-            // );
+            ST7735_DrawTriangleFill(
+                
+                xx4, yy4,
+                xx3, yy3,
+                xx1, yy1,
+                color
+            );
         }
 
         // for (std::vector<int> f : fs)
