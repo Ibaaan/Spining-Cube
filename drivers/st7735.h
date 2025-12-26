@@ -90,7 +90,6 @@
 #define DELAY 0x80
 
 #define SWAP_INT16_T(a, b) { int16_t t = a; a = b; b = t; }
-#define min(a, b) (((a) < (b)) ? (a) : (b))
 
 void ST7735_Init(void);
 void ST7735_FillScreen(uint16_t color);
